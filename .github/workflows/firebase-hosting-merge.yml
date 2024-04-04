@@ -15,20 +15,9 @@ jobs:
         with:
           node-version: '18'
       - uses: actions/checkout@v4
-      - name: Show exported environment variables
-        run: ls src/
-      - name: Create src/environment directory
-        run: mkdir -p src/environments
-      - name: Show exported environment variables
-        run: ls src/
-      - name: Show exported environment variables
-        run: echo "'${{vars.FIREBASE_VALUE}}'"
-      - name: Show exported environment variables
-        run: echo "$FIREBASE_VALUE"
-      - name: Show exported environment variables
-        run: echo "${{env.FIREBASE_VALUE}}"
-      - name: Export environment variables
-        run: echo "export const environment ='${{ secrets.FIREBASE_VALUE }}';" > src/environments/environment.ts
+      - run: node server.js
+        env:
+         FIREBASE_VALUE: '${{ vars.FIREBASE_VALUE}}'
       - name: Show exported environment variables
         run: cat src/environments/environment.ts
       - run: ls && npm ci && npm run build
