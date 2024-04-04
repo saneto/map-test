@@ -16,12 +16,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18'
+      - uses: actions/checkout@v4
+      - name: Show exported environment variables
+        run: ls
       - name: Export environment variables
         run: echo "export const environment ='${{ secrets.FIREBASE_VALUE }}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
-      - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - run: ls && npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
