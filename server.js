@@ -5,7 +5,7 @@ const path = require('path');
 const dir = "src/environments";
 const file = "environment.ts";
 
-const content = `${vars.FIREBASE_VALUE}`;
+const content = `${process.env.FIREBASE_VALUE}`;
 
 fs.access(dir, fs.constants.F_OK, (err) => {
     if (err) {
@@ -28,7 +28,7 @@ fs.access(dir, fs.constants.F_OK, (err) => {
             console.log("File is created", path.resolve(dir + "/" + file));
             const str = fs.readFileSync(dir + "/" + file).toString();
             console.log(str);
-            console.log(`${vars.FIREBASE_VALUE}`.toString());
+            console.log(`${process.env.FIREBASE_VALUE}`.toString());
         }
     } catch (error) {
         console.error(error);
