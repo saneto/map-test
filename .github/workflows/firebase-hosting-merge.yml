@@ -13,7 +13,7 @@ jobs:
       - name: Create src/environment directory
         run: mkdir -p src/environment
       - name: Export environment variables
-        run: echo "'${FIREBASE_VALUE}';" > src/environment/environment.ts
+        run: echo "'${env.FIREBASE_VALUE}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
       - uses: actions/checkout@v4
