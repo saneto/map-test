@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '14'
       - name: Export environment variables
-        run: echo "'${secrets.FIREBASE_VALUE}';" > src/environment/environment.ts
+        run: echo "'${{ secrets.FIREBASE_VALUE }}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
       - uses: actions/checkout@v4
