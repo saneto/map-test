@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dir = "src/environments";
+const dir = "src/environment";
 const file = "environment.ts";
 const prodFile = "environment.ts"; // For production deployment
 
