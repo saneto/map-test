@@ -12,8 +12,12 @@ jobs:
     steps:
       - name: Create src/environment directory
         run: mkdir -p src/environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Export environment variables
-        run: echo "'${variables.FIREBASE_VALUE}';" > src/environment/environment.ts
+        run: echo "'${secrets.FIREBASE_VALUE}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
       - uses: actions/checkout@v4
