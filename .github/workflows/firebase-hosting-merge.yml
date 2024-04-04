@@ -23,7 +23,7 @@ jobs:
       - name: Show2 exported environment variables
         run: ls
       - name: ShowV exported environment variables
-        run: ls /src
+        run: ls src
       - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v2
