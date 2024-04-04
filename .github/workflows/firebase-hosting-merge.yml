@@ -10,13 +10,17 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '20'
-      - run: node server.js
-        env:
-          FIREBASE_VALUE: '${{ secrets.FIREBASE_VALUE}}'
+          node-version: '14'
+      - name: Create src/environment directory
+        run: mkdir -p src/environment
+      - name: Export environment variables
+        run: echo "'${FIREBASE_VALUE}';" > src/environment/environment.ts
+      - name: Show exported environment variables
+        run: cat src/environment/environment.ts
+      - uses: actions/checkout@v4
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
