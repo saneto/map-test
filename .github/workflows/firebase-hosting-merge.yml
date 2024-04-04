@@ -21,6 +21,8 @@ jobs:
         run: mkdir -p src/environments
       - name: Show exported environment variables
         run: ls src/
+      - name: Show exported environment variables
+        run: echo "'${{vars.FIREBASE_VALUE}}'"
       - name: Export environment variables
         run: echo "export const environment ='${{ secrets.FIREBASE_VALUE }}';" > src/environments/environment.ts
       - name: Show exported environment variables
