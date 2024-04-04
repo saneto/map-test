@@ -1,0 +1,17 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let department of departmentList" (click)="getPostalCodeList(department.code)" >
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Nom : {{ department.nom }}/ code : {{ department.code }}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+            <p>Population global du departement {{ department.nom }} :  {{ getSum(listOfPostalCodePopulation[department.code]) }}</p>
+            <h3>Classement des 5 communes les plus peuplées dans le département.</h3>
+            <div *ngFor="let postalCodePopulation of listOfPostalCodePopulation[department.code]">
+                Nom : {{ postalCodePopulation.nom }}/ code : {{ postalCodePopulation.code }} / population : {{ postalCodePopulation.population }}
+            </div>
+    </mat-expansion-panel>
+</mat-accordion>
+
+
+<div id="map" style="height: 500px;"></div>

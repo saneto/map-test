@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-title>S'inscrire</mat-card-title>
+    <mat-card-content>
+                    <mat-form-field >
+                        <input matInput type="email"
+                        class="formControl"
+                        placeholder="Adresse email"
+                        #userEmail
+                        required />
+                    </mat-form-field><br/>
+                    <mat-form-field >
+                        <input matInput  type="password" class="formControl" placeholder="Mot de passe" #userPwd required />
+                    </mat-form-field>
+                    <!-- Calling SignIn Api from AuthService -->
+                    <div>
+                        <button  mat-flat-button color="primary"
+                        (click)="authService.SignUp(userEmail.value, userPwd.value)">S'inscrire</button>
+                    </div>
+                    <div class="forgotPassword">
+                        <a mat-button href="/forgot-password" color="primary" target="_blank">Mot de passe oublié?</a>
+                    </div>
+                    <div>
+                            <span>Déjà un compte?</span>
+                            <a mat-button routerLink="/sign-in" color="primary" target="_blank">
+                                Se connecter</a>
+                    </div>
+    </mat-card-content>
+</mat-card>

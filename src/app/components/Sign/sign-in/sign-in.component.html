@@ -1,0 +1,32 @@
+<mat-card>
+    <mat-card-title>Se connecter</mat-card-title>
+    <mat-card-content>
+        <div class="displayTable">
+            <div class="displayTableCell">
+                <div class="authBlock">
+                    <mat-form-field >
+                        <input matInput type="email" class="formControl" placeholder="Email Address" #userName required />
+                    </mat-form-field><br/>
+                    <mat-form-field >
+                        <input matInput  type="password" class="formControl" placeholder="Mot de passe" #userPassword required />
+                    </mat-form-field>
+                    <!-- Calling SignIn Api from AuthService -->
+                    <div>
+                        <button  mat-flat-button color="primary"
+                            (click)="login(userName.value, userPassword.value)">Se connecter</button>
+                    </div>
+                    <div class="forgotPassword">
+                        <a mat-button href="/forgot-password" color="primary" target="_blank">Mot de passe oublié?</a>
+                    </div>
+                    <div>
+                        <span>Première fois ? 
+                            </span><a mat-button routerLink="/register-user" color="primary" target="_blank">
+                                Inscris-toi</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
