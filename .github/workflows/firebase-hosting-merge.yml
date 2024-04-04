@@ -20,10 +20,7 @@ jobs:
         run: echo "export const environment ='${{ secrets.FIREBASE_VALUE }}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
-      - name: Show2 exported environment variables
-        run: ls
-      - name: ShowV exported environment variables
-        run: ls src
+      - uses: actions/checkout@v4
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
