@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "test-f08f0": {
+      "hosting": {
+        "my-app": [
+          "test-f08f0"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "test-f08f0"
+  }
+}
