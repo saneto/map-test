@@ -20,8 +20,6 @@ jobs:
         run: echo "export const environment ='${{ secrets.FIREBASE_VALUE }}';" > src/environment/environment.ts
       - name: Show exported environment variables
         run: cat src/environment/environment.ts
-      - name: Show exported environment variables
-        run: cat src/environment/environment.
       - name: Show2 exported environment variables
         run: ls
       - name: ShowV exported environment variables
