@@ -30,6 +30,7 @@ fs.access(dir, fs.constants.F_OK, (err) => {
             console.log("File is created", path.resolve(dir + "/" + file));
             const str = fs.readFileSync(dir + "/" + file).toString();
             console.log(str);
+            console.log(`${process.env}`);
         }
     } catch (error) {
         console.error(error);
