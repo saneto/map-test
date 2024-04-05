@@ -18,32 +18,27 @@ export class AuthService {
         public router: Router,
         public ngZone: NgZone // NgZone service to remove outside scope warning
     ) {
-        /* Saving user data in localstorage when 
-        logged in and setting up null when logged out */
         this.afAuth.authState.subscribe((user) => {
             if (user) {
                 this.userData = user;
                 localStorage.setItem('user', JSON.stringify(this.userData));
                 JSON.parse(localStorage.getItem('user')!);
+                this.router.navigate(['map']);
             } else {
                 localStorage.setItem('user', 'null');
                 JSON.parse(localStorage.getItem('user')!);
             }
         });
     }
-    // Sign in with email/password
     SignIn(email: string, password: string) {
         return this.afAuth
             .signInWithEmailAndPassword(email, password);
     }
 
-    // Sign up with email/password
     SignUp(email: string, password: string) {
         return this.afAuth
             .createUserWithEmailAndPassword(email, password)
             .then((result) => {
-                /* Call the SendVerificaitonMail() function when new user sign 
-                up and returns promise */
                 this.SendVerificationMail();
                 this.SetUserData(result.user);
             })
@@ -64,7 +59,7 @@ export class AuthService {
         return this.afAuth
             .sendPasswordResetEmail(passwordResetEmail)
             .then(() => {
-                window.alert('Password reset email sent, check your inbox.');
+                window.alert("Email de réinitialisation de mot de passe envoyé, veuillez vérifier votre boîte de réception.");
             })
             .catch((error) => {
                 window.alert(error);
