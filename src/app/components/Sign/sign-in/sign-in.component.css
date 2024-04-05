@@ -21,3 +21,8 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  .mainDiv{
+    width: 100%;
+
+}
