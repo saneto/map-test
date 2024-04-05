@@ -29,8 +29,7 @@ export class SignInComponent {
 
     login(email: string, password: string) {
         this.authService.SignIn(email, password).then(result =>{
-            console.log("tout c'est bien oassé",result);
-            this.router.navigate(['account']);
+            this.router.navigate(['map']);
 
         }).catch((error)=>{
             console.log("error",error);
