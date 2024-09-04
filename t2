@@ -1,0 +1,21 @@
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+public class ProtocolValidator implements ConstraintValidator<ValidateProtocolIfIpIsSet, MyDto> {
+
+    @Override
+    public void initialize(ValidateProtocolIfIpIsSet constraintAnnotation) {
+    }
+
+    @Override
+    public boolean isValid(MyDto dto, ConstraintValidatorContext context) {
+        // Custom validation logic: if IP is set, validate the protocol
+        if (dto.getIp() != null && !dto.getIp().isEmpty()) {
+            // Perform protocol validation here
+            return dto.getProtocol() != null && !dto.getProtocol().isEmpty();
+        }
+
+        // If IP is not set, validation passes (no need to validate protocol)
+        return true;
+    }
+}
