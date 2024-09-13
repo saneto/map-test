@@ -1,0 +1,32 @@
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
+
+@Component
+public class JwtUtil {
+
+    // Static method to get the user ID (assuming it's stored as a claim in the JWT token)
+    public static Long getUserIdFromToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication.getPrincipal() instanceof Jwt) {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            return jwt.getClaim("sub");  // Assuming "sub" contains the user ID
+        }
+
+        return null;
+    }
+
+    // Static method to get User role from the JWT token
+    public static String getUserRoleFromToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication.getPrincipal() instanceof Jwt) {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            return jwt.getClaim("role");  // Assuming "role" contains the user's role
+        }
+
+        return null;
+    }
+}
