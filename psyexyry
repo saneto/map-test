@@ -1,0 +1,54 @@
+src/
+ └── app/
+     ├── core/                            # Core application services and global providers
+     │   ├── auth/                        # Authentication and authorization
+     │   │   ├── auth.service.ts          # AuthService - handles login, logout
+     │   │   └── jwt.interceptor.ts       # Interceptor for JWT handling
+     │   ├── core.module.ts               # Core module (imported once in AppModule)
+     │   └── http/                        # Global HTTP handling logic
+     │       └── http-error.interceptor.ts
+     │
+     ├── shared/                          # Shared components, directives, and utilities
+     │   ├── components/                  # Reusable UI components
+     │   │   ├── button.component.ts      # ButtonComponent (standalone component)
+     │   ├── directives/                  # Reusable directives
+     │   ├── pipes/                       # Reusable pipes
+     │   ├── services/                    # Reusable services (e.g., utilities)
+     │   └── shared.module.ts             # Shared module definition
+     │
+     ├── features/                        # Feature domains (bounded contexts)
+     │   ├── product/                     # Product feature module (Product Domain)
+     │   │   ├── components/              # Product-related UI components
+     │   │   │   ├── product-list.component.ts  # List of products (standalone)
+     │   │   │   ├── product-detail.component.ts # Product details (standalone)
+     │   │   ├── services/                # Product-specific services
+     │   │   │   ├── product.service.ts   # ProductService (handles product-related logic)
+     │   │   ├── models/                  # Domain models related to Product
+     │   │   │   └── product.model.ts     # Product domain model
+     │   │   ├── product.module.ts        # ProductModule definition
+     │   │   └── product-routing.module.ts# Lazy loaded routes for the Product module
+     │   │
+     │   ├── order/                       # Order feature module (Order Domain)
+     │   │   ├── components/              # Order-related components
+     │   │   │   ├── order-list.component.ts
+     │   │   │   └── order-summary.component.ts
+     │   │   ├── services/                # Services for handling orders
+     │   │   │   └── order.service.ts
+     │   │   ├── models/                  # Domain models related to Order
+     │   │   │   └── order.model.ts
+     │   │   ├── order.module.ts          # OrderModule definition
+     │   │   └── order-routing.module.ts  # Lazy loaded routes for Order module
+     │   │
+     │   └── user/                        # User feature module (User Domain)
+     │       ├── components/
+     │       │   └── profile.component.ts
+     │       ├── services/
+     │       │   └── user.service.ts
+     │       ├── models/
+     │       │   └── user.model.ts
+     │       ├── user.module.ts
+     │       └── user-routing.module.ts
+     │
+     └── app.component.ts                 # Root component
+         app.module.ts                    # Root module
+         app-routing.module.ts            # Application routes (lazy loading feature modules)
