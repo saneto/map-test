@@ -1,0 +1,28 @@
+CREATE OR REPLACE FUNCTION is_ip_in_entries(current_ip_start INET, current_ip_end INET) 
+RETURNS BOOLEAN AS $$
+DECLARE
+    entry TEXT;
+    entry_start INET;
+    entry_end INET;
+BEGIN
+    FOR entry IN SELECT ip_range FROM ip_entries LOOP
+        -- Check if the entry is a single IP or a CIDR range
+        IF entry LIKE '%/%' THEN
+            -- It's a CIDR range
+            entry_start := (entry::CIDR).host();  -- Get the first address in the range
+            entry_end := (entry::CIDR).broadcast(); -- Get the last address in the range
+        ELSE
+            -- It's a single IP
+            entry_start := entry::INET;
+            entry_end := entry::INET;  -- Same for single IP
+        END IF;
+
+        -- Check if the current IP range overlaps with the entry range
+        IF (current_ip_start <= entry_end) AND (current_ip_end >= entry_start) THEN
+            RETURN TRUE;  -- Overlap found
+        END IF;
+    END LOOP;
+
+    RETURN FALSE;  -- No overlap found
+END;
+$$ LANGUAGE plpgsql;
