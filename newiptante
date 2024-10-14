@@ -1,0 +1,14 @@
+CREATE OR REPLACE FUNCTION does_ip_overlap(new_ip CIDR) 
+RETURNS BOOLEAN AS $$
+DECLARE
+    existing_ip CIDR;
+BEGIN
+    FOR existing_ip IN SELECT ip_range FROM ip_entries LOOP
+        IF new_ip && existing_ip THEN
+            RETURN TRUE;  -- Overlap found
+        END IF;
+    END LOOP;
+
+    RETURN FALSE;  -- No overlap found
+END;
+$$ LANGUAGE plpgsql;
