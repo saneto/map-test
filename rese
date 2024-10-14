@@ -1,0 +1,31 @@
+DO $$
+DECLARE
+    new_ip INET := '10.171.17.10';  -- The new IP address you want to check/insert
+    existing_ip_count INT;
+BEGIN
+    -- Check if the new IP exists in the table or falls within any existing CIDR ranges
+    SELECT COUNT(*) INTO existing_ip_count
+    FROM ip_addresses
+    WHERE new_ip::INET << (
+        CASE 
+            WHEN ip_address LIKE '%/%' THEN 
+                CASE 
+                    -- Extract the mask and ensure it doesn't exceed 32
+                    WHEN CAST(SPLIT_PART(ip_address, '/', 2) AS INT) > 32 THEN
+                        SPLIT_PART(ip_address, '/', 1) || '/32'
+                    ELSE
+                        ip_address  -- Leave the IP address as is if the mask is <= 32
+                END
+            ELSE
+                ip_address || '/32'  -- If no mask, assume it's a /32
+        END
+    )::CIDR;
+
+    -- If the IP does not exist and is not part of an existing CIDR, insert it
+    IF existing_ip_count = 0 THEN
+        INSERT INTO ip_addresses (ip_address) VALUES (new_ip || '/32');  -- Insert with /32 mask by default
+        RAISE NOTICE 'IP % added successfully.', new_ip;
+    ELSE
+        RAISE NOTICE 'IP % already exists or is part of an existing CIDR.', new_ip;
+    END IF;
+END $$;
