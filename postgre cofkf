@@ -1,0 +1,26 @@
+WITH normalized_table1 AS (
+    SELECT DISTINCT
+        CASE
+            WHEN position('-' in value) > 0 THEN generate_series(
+                split_part(value, '-', 1)::int,
+                split_part(value, '-', 2)::int
+            )::varchar
+            ELSE unnest(string_to_array(value, ','))::varchar
+        END AS number
+    FROM table1
+),
+normalized_table2 AS (
+    SELECT DISTINCT
+        CASE
+            WHEN position('-' in value) > 0 THEN generate_series(
+                split_part(value, '-', 1)::int,
+                split_part(value, '-', 2)::int
+            )::varchar
+            ELSE unnest(string_to_array(value, ','))::varchar
+        END AS number
+    FROM table2
+)
+SELECT nt1.number
+FROM normalized_table1 nt1
+JOIN normalized_table2 nt2
+    ON nt1.number = nt2.number;
