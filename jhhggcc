@@ -1,0 +1,49 @@
+CREATE OR REPLACE FUNCTION check_overlap(value1 VARCHAR, value2 VARCHAR)
+RETURNS BOOLEAN LANGUAGE plpgsql AS
+$$
+DECLARE
+    num1 VARCHAR;
+    num2 VARCHAR;
+    arr1 VARCHAR[];
+    arr2 VARCHAR[];
+    lower_bound INT;
+    upper_bound INT;
+    match_found BOOLEAN := FALSE;
+BEGIN
+    -- Split value1 by commas
+    arr1 := string_to_array(value1, ',');
+    -- Split value2 by commas
+    arr2 := string_to_array(value2, ',');
+
+    -- Loop through each element in arr1
+    FOREACH num1 IN ARRAY arr1 LOOP
+        -- Check if num1 is a range
+        IF position('-' IN num1) > 0 THEN
+            -- Extract the bounds of the range
+            lower_bound := split_part(num1, '-', 1)::int;
+            upper_bound := split_part(num1, '-', 2)::int;
+
+            -- Loop through each element in arr2
+            FOREACH num2 IN ARRAY arr2 LOOP
+                -- Check if num2 is a single number
+                IF num2 ~ '^\d+$' THEN
+                    -- Check if num2 is within the range
+                    IF (lower_bound <= num2::int AND upper_bound >= num2::int) THEN
+                        RETURN TRUE;  -- Overlap found in the range
+                    END IF;
+                END IF;
+            END LOOP;
+
+        ELSE
+            -- If not a range, check for exact matches
+            FOREACH num2 IN ARRAY arr2 LOOP
+                IF num1 = num2 THEN
+                    RETURN TRUE;  -- Exact match found
+                END IF;
+            END LOOP;
+        END IF;
+    END LOOP;
+
+    RETURN FALSE;  -- No overlap found
+END;
+$$;
