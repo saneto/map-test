@@ -1,0 +1,37 @@
+CREATE OR REPLACE FUNCTION check_overlap(value1 VARCHAR, value2 VARCHAR)
+RETURNS BOOLEAN LANGUAGE plpgsql AS
+$$
+DECLARE
+    num1 VARCHAR;
+    num2 VARCHAR;
+BEGIN
+    -- Iterate through all numbers in value1
+    FOR num1 IN
+        SELECT CASE
+                  WHEN position('-' in value1) > 0 THEN generate_series(
+                      split_part(value1, '-', 1)::int,
+                      split_part(value1, '-', 2)::int
+                  )::varchar
+                  ELSE unnest(string_to_array(value1, ','))
+              END
+    LOOP
+        -- Iterate through all numbers in value2
+        FOR num2 IN
+            SELECT CASE
+                      WHEN position('-' in value2) > 0 THEN generate_series(
+                          split_part(value2, '-', 1)::int,
+                          split_part(value2, '-', 2)::int
+                      )::varchar
+                      ELSE unnest(string_to_array(value2, ','))
+                  END
+        LOOP
+            -- Check if there is a match
+            IF num1 = num2 THEN
+                RETURN TRUE;  -- Overlap found
+            END IF;
+        END LOOP;
+    END LOOP;
+
+    RETURN FALSE;  -- No overlap found
+END;
+$$;
