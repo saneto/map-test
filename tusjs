@@ -1,0 +1,13 @@
+function validateIpWithOptionalMask(input: string): boolean {
+    const ipWithMaskRegex = /^(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]\d)(\.|$)){4}(\/(3[0-2]|[12]?\d))?$/;
+    return ipWithMaskRegex.test(input);
+}
+
+// Example usages:
+console.log(validateIpWithOptionalMask("192.168.1.1"));        // true
+console.log(validateIpWithOptionalMask("192.168.1.1/24"));     // true
+console.log(validateIpWithOptionalMask("255.255.255.255"));    // true
+console.log(validateIpWithOptionalMask("10.0.0.1/16"));         // true
+console.log(validateIpWithOptionalMask("256.100.50.25"));       // false (invalid IP)
+console.log(validateIpWithOptionalMask("192.168.1.1/33"));      // false (invalid mask)
+console.log(validateIpWithOptionalMask("192.168.1.1."));        // false (ends with dot)
