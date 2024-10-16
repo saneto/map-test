@@ -1,0 +1,47 @@
+CREATE OR REPLACE FUNCTION check_overlap(value1 VARCHAR, value2 VARCHAR)
+RETURNS BOOLEAN LANGUAGE plpgsql AS
+$$
+DECLARE
+    num1 VARCHAR;
+    num2 VARCHAR;
+    arr1 VARCHAR[];
+    arr2 VARCHAR[];
+    i1 INT;
+    i2 INT;
+BEGIN
+    -- Split value1 into an array (handles both comma-separated and ranges)
+    IF position('-' in value1) > 0 THEN
+        arr1 := ARRAY(
+            SELECT generate_series(
+                split_part(value1, '-', 1)::int,
+                split_part(value1, '-', 2)::int
+            )::varchar
+        );
+    ELSE
+        arr1 := string_to_array(value1, ',');
+    END IF;
+
+    -- Split value2 into an array (handles both comma-separated and ranges)
+    IF position('-' in value2) > 0 THEN
+        arr2 := ARRAY(
+            SELECT generate_series(
+                split_part(value2, '-', 1)::int,
+                split_part(value2, '-', 2)::int
+            )::varchar
+        );
+    ELSE
+        arr2 := string_to_array(value2, ',');
+    END IF;
+
+    -- Loop through array1 (arr1) and array2 (arr2)
+    FOR i1 IN array_lower(arr1, 1) .. array_upper(arr1, 1) LOOP
+        FOR i2 IN array_lower(arr2, 1) .. array_upper(arr2, 1) LOOP
+            IF arr1[i1] = arr2[i2] THEN
+                RETURN TRUE; -- Overlap found
+            END IF;
+        END LOOP;
+    END LOOP;
+
+    RETURN FALSE; -- No overlap found
+END;
+$$;
