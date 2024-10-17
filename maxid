@@ -1,0 +1,22 @@
+DO $$ 
+DECLARE
+    table_record RECORD;
+    max_id bigint;
+BEGIN
+    -- Loop through all tables that have an 'id' column
+    FOR table_record IN
+        SELECT table_name
+        FROM information_schema.columns
+        WHERE column_name = 'id' 
+          AND table_schema = 'public'
+          AND is_identity = 'YES'
+    LOOP
+        -- Get the maximum value of the 'id' column for the current table
+        EXECUTE format('SELECT MAX(id) FROM %I', table_record.table_name) INTO max_id;
+
+        -- If the table contains any rows, reset the identity sequence
+        IF max_id IS NOT NULL THEN
+            EXECUTE format('ALTER TABLE %I ALTER COLUMN id RESTART WITH %s', table_record.table_name, max_id + 1);
+        END IF;
+    END LOOP;
+END $$;
