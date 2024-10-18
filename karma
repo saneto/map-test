@@ -1,0 +1,23 @@
+module.exports = function(config) {
+  config.set({
+    frameworks: ['jasmine', 'karma-typescript'], // Include 'karma-typescript'
+
+    files: [
+      'src/**/*.ts' // Path to your TypeScript files
+    ],
+
+    preprocessors: {
+      'src/**/*.ts': ['karma-typescript'] // Preprocess TypeScript files
+    },
+
+    reporters: ['progress', 'karma-typescript'], // Add 'karma-typescript' reporter
+
+    browsers: ['Chrome'], // Specify a browser
+
+    singleRun: true,
+
+    karmaTypescriptConfig: {
+      tsconfig: './tsconfig.json', // Path to your TypeScript config
+    }
+  });
+};
