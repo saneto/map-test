@@ -1,0 +1,26 @@
+module.exports = function(config) {
+  config.set({
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    files: [
+      'src/**/*.spec.js', // Your test files
+      'src/**/*.js' // Your AngularJS source files
+    ],
+    preprocessors: {
+      'src/**/*.js': ['coverage'], // Istanbul will instrument the code to calculate coverage
+    },
+    reporters: ['progress', 'coverage-istanbul', 'converge-istanbul'], // Add your custom reporter
+    coverageIstanbulReporter: {
+      dir: require('path').join(__dirname, 'coverage'),
+      reports: ['html', 'lcovonly', 'text-summary'], // Configure report types
+      fixWebpackSourcePaths: true
+    },
+    convergeIstanbulReporter: {
+      outputFile: 'path/to/converge-report.json', // Define where your report will be stored
+      // Additional custom settings based on your needs
+    },
+    port: 9876,
+    browsers: ['Chrome'], // or other browsers
+    singleRun: false,
+    concurrency: Infinity
+  });
+};
