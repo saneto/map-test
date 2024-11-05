@@ -1,0 +1,20 @@
+-- Assuming 'users' table has columns: user_id, pole_country, juri_country
+-- Assuming 'sra_params' table has columns: sra_id, pôle_country, juri_country, default_sra_id
+
+UPDATE users u
+SET sra_id = COALESCE(pole_sra.sra_id, juri_sra.sra_id, default_sra.default_sra_id)
+FROM (
+    SELECT s.sra_id, u.user_id
+    FROM users u
+    JOIN sra_params s ON s.pôle_country = u.pole_country
+) AS pole_sra
+FULL OUTER JOIN (
+    SELECT s.sra_id, u.user_id
+    FROM users u
+    JOIN sra_params s ON s.juri_country = u.juri_country
+) AS juri_sra ON pole_sra.user_id = juri_sra.user_id
+FULL OUTER JOIN (
+    SELECT default_sra_id, user_id
+    FROM sra_params
+) AS default_sra ON default_sra.default_sra_id IS NOT NULL
+WHERE u.user_id = COALESCE(pole_sra.user_id, juri_sra.user_id);
