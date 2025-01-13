@@ -1,0 +1,20 @@
+public class BulkloadDTO {
+    private String property1;
+    private int property2;
+
+    // Getters and setters
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BulkloadDTO that = (BulkloadDTO) o;
+        return property2 == that.property2 &&
+               Objects.equals(property1, that.property1);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(property1, property2);
+    }
+}
