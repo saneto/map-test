@@ -1,0 +1,43 @@
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.ConstraintViolation;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class UserDTOTest {
+
+    private static Validator validator;
+
+    @BeforeAll
+    public static void setUpValidator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
+    @Test
+    public void testValidUserDTO() {
+        UserDTO userDTO = new UserDTO("John Doe", "john.doe@example.com");
+
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
+
+        assertTrue(violations.isEmpty(), "There should be no violations for a valid DTO");
+    }
+
+    @Test
+    public void testInvalidUserDTO() {
+        UserDTO userDTO = new UserDTO(null, null);
+
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
+
+        assertFalse(violations.isEmpty(), "There should be violations for an invalid DTO");
+
+        for (ConstraintViolation<UserDTO> violation : violations) {
+            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
+        }
+    }
+}
