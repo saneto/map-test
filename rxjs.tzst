@@ -1,0 +1,43 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { writeFile, utils, WorkBook } from 'xlsx';
+import { expand, map, reduce } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PaginationService {
+  private apiUrl = 'https://api.example.com/data'; // Replace with your API
+  private pageSize = 10; // Define page size
+
+  constructor(private http: HttpClient) {}
+
+  fetchPage(page: number): Observable<{ data: any[], nextPage: number | null }> {
+    return this.http.get<any>(`${this.apiUrl}?page=${page}&size=${this.pageSize}`).pipe(
+      map(response => ({
+        data: response.items, // Adjust based on API response
+        nextPage: response.nextPage // Determine next page logic
+      }))
+    );
+  }
+
+  exportDataToExcel() {
+    let allData: any[] = [];
+
+    this.fetchPage(1).pipe(
+      expand(response => response.nextPage ? this.fetchPage(response.nextPage) : of(null)),
+      map(response => response ? response.data : []),
+      reduce((acc, curr) => acc.concat(curr), [])
+    ).subscribe(data => {
+      allData = data;
+      this.writeToExcel(allData);
+    });
+  }
+
+  writeToExcel(data: any[]) {
+    const ws = utils.json_to_sheet(data);
+    const wb: WorkBook = { Sheets: { 'Data': ws }, SheetNames: ['Data'] };
+    writeFile(wb, 'ExportedData.xlsx');
+  }
+}
