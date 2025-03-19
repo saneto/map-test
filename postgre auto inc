@@ -1,0 +1,19 @@
+DO $$ 
+DECLARE 
+    r RECORD;
+BEGIN
+    FOR r IN 
+        SELECT 
+            c.oid::regclass AS table_name, 
+            a.attname AS column_name, 
+            pg_get_serial_sequence(c.oid::regclass::text, a.attname) AS sequence_name
+        FROM pg_class c
+        JOIN pg_attribute a ON a.attrelid = c.oid
+        WHERE c.relkind = 'r' AND a.attidentity IN ('a', 'd') -- 'a' pour ALWAYS, 'd' pour DEFAULT
+    LOOP
+        EXECUTE format(
+            'SELECT setval(''%s'', COALESCE((SELECT MAX(%I) FROM %I), 1), true);', 
+            r.sequence_name, r.column_name, r.table_name
+        );
+    END LOOP;
+END $$;
