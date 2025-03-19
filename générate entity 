@@ -1,0 +1,19 @@
+DO $$ 
+DECLARE 
+    rec RECORD;
+BEGIN 
+    FOR rec IN 
+        SELECT table_name 
+        FROM information_schema.columns 
+        WHERE column_name = 'id' 
+        AND table_schema = 'public' 
+        AND is_identity = 'NO'
+    LOOP 
+        EXECUTE format('
+            ALTER TABLE %I 
+            ALTER COLUMN id 
+            DROP DEFAULT, 
+            ADD GENERATED ALWAYS AS IDENTITY;', 
+            rec.table_name);
+    END LOOP;
+END $$;
