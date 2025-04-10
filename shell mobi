@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# === Configuration ===
+TARGET_FILE="/path/to/your/file.txt"     # File you want to monitor
+LOG_FILE="$HOME/.daily_read_log"         # Log file storing last read date
+TODAY=$(date +%Y-%m-%d)                  # Current date
+
+# === Logic ===
+# Check if target file exists
+if [ -f "$TARGET_FILE" ]; then
+    # Check if the file has already been read today
+    LAST_READ=$(grep "^$TARGET_FILE" "$LOG_FILE" 2>/dev/null | cut -d ' ' -f2)
+
+    if [ "$LAST_READ" == "$TODAY" ]; then
+        echo "[$TODAY] $TARGET_FILE has already been read today."
+    else
+        echo "[$TODAY] Reading $TARGET_FILE..."
+        cat "$TARGET_FILE"
+        
+        # Update or add the entry in the log
+        grep -v "^$TARGET_FILE" "$LOG_FILE" 2>/dev/null > "${LOG_FILE}.tmp"
+        echo "$TARGET_FILE $TODAY" >> "${LOG_FILE}.tmp"
+        mv "${LOG_FILE}.tmp" "$LOG_FILE"
+    fi
+else
+    echo "[$TODAY] File $TARGET_FILE does not exist."
+fi
