@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# === Configuration ===
+TARGET_FILE="/path/to/your/file.txt"     # Replace with the file to check
+LOG_FILE="$HOME/.daily_read_log"         # Log of files read per day
+JAVA_CLASS="MyJavaProgram"               # Replace with your Java class name
+TODAY=$(date +%Y-%m-%d)
+
+# === Check if file exists ===
+if [ -f "$TARGET_FILE" ]; then
+    # Check if it was already read today
+    LAST_READ=$(grep "^$TARGET_FILE" "$LOG_FILE" 2>/dev/null | cut -d ' ' -f2)
+
+    if [ "$LAST_READ" == "$TODAY" ]; then
+        echo "[$TODAY] $TARGET_FILE already processed today."
+    else
+        echo "[$TODAY] Processing $TARGET_FILE..."
+
+        # Read file content (optional)
+        cat "$TARGET_FILE"
+
+        # Run Java class with file as parameter
+        java "$JAVA_CLASS" "$TARGET_FILE"
+
+        # Update log
+        grep -v "^$TARGET_FILE" "$LOG_FILE" 2>/dev/null > "${LOG_FILE}.tmp"
+        echo "$TARGET_FILE $TODAY" >> "${LOG_FILE}.tmp"
+        mv "${LOG_FILE}.tmp" "$LOG_FILE"
+    fi
+else
+    echo "[$TODAY] File not found: $TARGET_FILE"
+fi
